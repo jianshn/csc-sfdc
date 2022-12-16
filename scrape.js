@@ -26,7 +26,7 @@ async function realProcess(xhr) {
         console.log('processing:' + xhr.responseURL);
         const rows = JSON.parse(xhr.responseText)['actions'][0]['returnValue']['factMap']['T!T']['rows'];
 
-        console.log(xhr.response)
+        console.log(xhr.response['actions'][0]['returnValue']['factMap']['0_0_2!T']['rows'])
     }
 }
 
