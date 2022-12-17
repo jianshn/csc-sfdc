@@ -30,6 +30,9 @@ async function realProcess(xhr) {
         console.log(keys);
         
         for (key in keys) {
+            console.log(key)    
+        };
+        for (key in keys) {
             if (data[key]['rows']) {
                 let i = 0;
                 while (i < data[key]['rows'].length) {
