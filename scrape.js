@@ -29,33 +29,30 @@ async function realProcess(xhr) {
         var keys = Object.keys(data);
         console.log(keys);
         
-        for (key in keys) {
-            console.log(key)    
-        };
-        for (key in keys) {
-            if (data[key]['rows']) {
+        for (let j = 0; j < keys.length; j++) {
+            if (data[keys[j]]['rows']) {
                 let i = 0;
-                while (i < data[key]['rows'].length) {
+                while (i < data[keys[j]]['rows'].length) {
                     // Region
-                    const region = data[key]['rows'][i]['dataCells'][0]['label']
+                    const region = data[keys[j]]['rows'][i]['dataCells'][0]['label']
 
                     // Opportunity Owner
-                    const owner = region = data[key]['rows'][i]['dataCells'][1]['label'];
+                    const owner = region = data[keys[j]]['rows'][i]['dataCells'][1]['label'];
 
                     // Opportunity Name
-                    const name = region = data[key]['rows'][i]['dataCells'][2]['label'];
+                    const name = region = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
 
                     // Close date
-                    const close_date = data[key]['rows'][i]['dataCells'][3]['label'];
+                    const close_date = data[keys[j]]['rows'][i]['dataCells'][3]['label'];
 
                     // Total opp
-                    const total_opp = data[key]['rows'][i]['dataCells'][4]['label'];
+                    const total_opp = data[keys[j]]['rows'][i]['dataCells'][4]['label'];
 
                     // Next step
-                    const nextStep = data[key]['rows'][i]['dataCells'][5]['label'];
+                    const nextStep = data[keys[j]]['rows'][i]['dataCells'][5]['label'];
 
                     // Next step updated
-                    const nextStep_updated = data[key]['rows'][i]['dataCells'][6]['label'];
+                    const nextStep_updated = data[keys[j]]['rows'][i]['dataCells'][6]['label'];
 
                     console.log(region, "|", owner, "|", name, "|", close_date, "|", total_opp, "|", nextStep, "|", nextStep_updated);
 
