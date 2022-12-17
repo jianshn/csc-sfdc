@@ -24,10 +24,47 @@ async function realProcess(xhr) {
         const notification_url = new NotificationUrl(notification_new_url);
 
         console.log('processing:' + xhr.responseURL);
-        const rows = JSON.parse(xhr.responseText)['actions'][0]['returnValue']['factMap']['T!T']['rows'];
 
-        const tmp = JSON.parse(xhr.responseText)
-        console.log(tmp["actions"][0]['returnValue']['factMap']['0_0_2!T']['aggregates'][0]['value'])
+        const data = JSON.parse(xhr.responseText)['actions'][0]['returnValue']['factmap'];
+        var keys = Object.keys(data);
+        
+        for (key in keys) {
+            if (data[key]['rows']) {
+                let i = 0;
+                while (i < data[key]['rows'].length) {
+                    // Region
+                    const region = data[key]['rows'][i]['dataCells'][0]['label']
+
+                    // Opportunity Owner
+                    const owner = region = data[key]['rows'][i]['dataCells'][1]['label'];
+
+                    // Opportunity Name
+                    const name = region = data[key]['rows'][i]['dataCells'][2]['label'];
+
+                    // Close date
+                    const close_date = data[key]['rows'][i]['dataCells'][3]['label'];
+
+                    // Total opp
+                    const total_opp = data[key]['rows'][i]['dataCells'][4]['label'];
+
+                    // Next step
+                    const nextStep = data[key]['rows'][i]['dataCells'][5]['label'];
+
+                    // Next step updated
+                    const nextStep_updated = data[key]['rows'][i]['dataCells'][6]['label'];
+
+                    console.log(region, "|", owner, "|", name, "|", close_date, "|", total_opp, "|", nextStep, "|", nextStep_updated);
+
+                    i++;
+                }
+               
+            }
+        
+        }
+        
+        
+        
+        
         console.log('end of result')
     }
 }
