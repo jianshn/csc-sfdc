@@ -33,35 +33,43 @@ async function realProcess(xhr) {
             if (data[keys[j]]['rows']) {
                 for (var i in data[keys[j]]['rows']) {
                     // Region
-                    const region = data[keys[j]]['rows'][i]['dataCells'][0]['label']
+                    const subregion = data[keys[j]]['rows'][i]['dataCells'][0]['label']
 
                     // Opportunity Owner
-                    const owner = data[keys[j]]['rows'][i]['dataCells'][1]['label'];
+                    const oppowner = data[keys[j]]['rows'][i]['dataCells'][1]['label'];
 
                     // Opportunity Name
-                    const name = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
+                    const oppname = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
 
                     // Close date
-                    const close_date = data[keys[j]]['rows'][i]['dataCells'][3]['label'];
+                    const closedate = data[keys[j]]['rows'][i]['dataCells'][3]['label'];
 
                     // Total opp
-                    const total_opp = data[keys[j]]['rows'][i]['dataCells'][4]['label'];
+                    const totalopp = data[keys[j]]['rows'][i]['dataCells'][4]['label'];
 
                     // Next step
-                    const nextStep = data[keys[j]]['rows'][i]['dataCells'][5]['label'];
+                    const nextstep = data[keys[j]]['rows'][i]['dataCells'][5]['label'];
 
                     // Next step updated
-                    const nextStep_updated = data[keys[j]]['rows'][i]['dataCells'][6]['label'];
+                    const nextstepupdated = data[keys[j]]['rows'][i]['dataCells'][6]['label'];
 
-                    console.log(region, "|", owner, "|", name, "|", close_date, "|", total_opp, "|", nextStep, "|", nextStep_updated);
+                    console.log(subregion, "|", oppowner, "|", oppname, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated);
+                    
+                    try {
+                        let task = new Task(subregion, oppowner, oppname, closedate, totalopp, nextstep, nextstepupdated, notification_url, GM_xmlhttpRequest);
+
+                        // send task to slack
+                        task.notifyNewTask();
+
+                    } catch(e) {
+                        console.log(e);
+                        continue;
+                    }
                 }
                
             }
         
         }
-        
-        
-        
         
         console.log('end of result')
     }
@@ -89,7 +97,11 @@ class Task {
 
         this.ttl = 0;
     }
-
+    
+    notifyNewTask() {
+        this.notify(this.notification_url.notification_new_url);
+    }
+    
     notify(slack_url) {
         const data = {
             subregion: this.subregion,
