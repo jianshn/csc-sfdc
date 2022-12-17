@@ -29,10 +29,9 @@ async function realProcess(xhr) {
         var keys = Object.keys(data);
         console.log(keys);
         
-        for (let j = 0; j < keys.length; j++) {
+        for (var j in keys) {
             if (data[keys[j]]['rows']) {
-                let i = 0;
-                while (i < data[keys[j]]['rows'].length) {
+                for (var i in data[keys[j]]['rows']) {
                     // Region
                     const region = data[keys[j]]['rows'][i]['dataCells'][0]['label']
 
@@ -55,8 +54,6 @@ async function realProcess(xhr) {
                     const nextStep_updated = data[keys[j]]['rows'][i]['dataCells'][6]['label'];
 
                     console.log(region, "|", owner, "|", name, "|", close_date, "|", total_opp, "|", nextStep, "|", nextStep_updated);
-
-                    i++;
                 }
                
             }
