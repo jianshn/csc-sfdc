@@ -36,10 +36,10 @@ async function realProcess(xhr) {
                     const region = data[keys[j]]['rows'][i]['dataCells'][0]['label']
 
                     // Opportunity Owner
-                    const owner = region = data[keys[j]]['rows'][i]['dataCells'][1]['label'];
+                    const owner = data[keys[j]]['rows'][i]['dataCells'][1]['label'];
 
                     // Opportunity Name
-                    const name = region = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
+                    const name = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
 
                     // Close date
                     const close_date = data[keys[j]]['rows'][i]['dataCells'][3]['label'];
