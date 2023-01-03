@@ -56,7 +56,7 @@ async function realProcess(xhr) {
                     console.log(subregion, "|", oppowner, "|", oppname, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated);
                     
                     try {
-                        let task = new Task(subregion, oppowner, oppname, closedate, totalopp, nextstep, nextstepupdated, notification_url, GM_xmlhttpRequest);
+                        let task = new Task(subregion, oppowner, oppname, totalopp, notification_url, GM_xmlhttpRequest);
 
                         // send task to slack
                         task.notifyNewTask();
@@ -82,14 +82,11 @@ class NotificationUrl {
 }
 
 class Task {
-    constructor(subregion, oppowner, oppname, closedate, totalopp, nextstep, nextstepupdated, notification_url, xhr) {
+    constructor(subregion, oppowner, oppname, totalopp, notification_url, xhr) {
         this.subregion = subregion;
         this.oppowner = oppowner;
         this.oppname = oppname;
-        this.closedate = closedate;
         this.totalopp = totalopp;
-        this.nextstep = nextstep;
-        this.nextstepupdated = nextstepupdated;
 
         this.notification_url = notification_url;
 
@@ -107,9 +104,7 @@ class Task {
             subregion: this.subregion,
             oppowner: this.oppowner,
             oppname: this.oppname,
-            closedate: this.closedate,
             totalopp: this.totalopp,
-            nextstep: this.nextstep
         };
 
         this.xhr({
