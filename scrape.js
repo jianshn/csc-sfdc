@@ -92,7 +92,7 @@ class Task {
         this.subregion = subregion;
         this.oppowner = oppowner;
         this.oppname = oppname;
-        this.opp_sfdcid = opp_sfdcid
+        this.opp_sfdcid = "https://aws-crm.lightning.force.com/lightning/r/Report/" + opp_sfdcid + "/view";
         this.totalopp = totalopp;
         this.membercreatedate = membercreatedate
 
