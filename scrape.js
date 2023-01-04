@@ -28,7 +28,6 @@ async function realProcess(xhr) {
         const data = JSON.parse(xhr.responseText)['actions'][0]['returnValue']['factMap'];
         var keys = Object.keys(data);
         console.log(keys);
-        console.log(xhr.responseText['actions']);
         
         for (var j in keys) {
             if (data[keys[j]]['rows']) {
@@ -53,11 +52,14 @@ async function realProcess(xhr) {
 
                     // Next step updated
                     const nextstepupdated = data[keys[j]]['rows'][i]['dataCells'][6]['label'];
+                    
+                    // Member create date
+                    const membercreatedate = data[keys[j]]['rows'][i]['dataCells'][7]['label'];
 
-                    console.log(subregion, "|", oppowner, "|", oppname, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated);
+                    console.log(subregion, "|", oppowner, "|", oppname, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated, "|", membercreatedate);
                     
                     try {
-                        let task = new Task(subregion, oppowner, oppname, totalopp, notification_url, GM_xmlhttpRequest);
+                        let task = new Task(subregion, oppowner, oppname, totalopp, membercreatedate, notification_url, GM_xmlhttpRequest);
 
                         // send task to slack
                         task.notifyNewTask();
@@ -83,11 +85,12 @@ class NotificationUrl {
 }
 
 class Task {
-    constructor(subregion, oppowner, oppname, totalopp, notification_url, xhr) {
+    constructor(subregion, oppowner, oppname, totalopp, membercreatedate, notification_url, xhr) {
         this.subregion = subregion;
         this.oppowner = oppowner;
         this.oppname = oppname;
         this.totalopp = totalopp;
+        this.membercreatedate = membercreatedate
 
         this.notification_url = notification_url;
 
@@ -106,6 +109,7 @@ class Task {
             oppowner: this.oppowner,
             oppname: this.oppname,
             totalopp: this.totalopp,
+            membercreatedate: this.membercreatedate
         };
 
         this.xhr({
