@@ -40,6 +40,9 @@ async function realProcess(xhr) {
 
                     // Opportunity Name
                     const oppname = data[keys[j]]['rows'][i]['dataCells'][2]['label'];
+                    
+                    // Opp Salesforce Id
+                    const opp_sfdcid = data[keys[j]]['rows'][i]['dataCells'][2]['recordId'];
 
                     // Close date
                     const closedate = data[keys[j]]['rows'][i]['dataCells'][3]['label'];
@@ -56,10 +59,10 @@ async function realProcess(xhr) {
                     // Member create date
                     const membercreatedate = data[keys[j]]['rows'][i]['dataCells'][7]['label'];
 
-                    console.log(subregion, "|", oppowner, "|", oppname, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated, "|", membercreatedate);
+                    console.log(subregion, "|", oppowner, "|", oppname, "|", opp_sfdcid, "|", closedate, "|", totalopp, "|", nextstep, "|", nextstepupdated, "|", membercreatedate);
                     
                     try {
-                        let task = new Task(subregion, oppowner, oppname, totalopp, membercreatedate, notification_url, GM_xmlhttpRequest);
+                        let task = new Task(subregion, oppowner, oppname, opp_sfdcid, totalopp, membercreatedate, notification_url, GM_xmlhttpRequest);
 
                         // send task to slack
                         task.notifyNewTask();
@@ -85,10 +88,11 @@ class NotificationUrl {
 }
 
 class Task {
-    constructor(subregion, oppowner, oppname, totalopp, membercreatedate, notification_url, xhr) {
+    constructor(subregion, oppowner, oppname, opp_sfdcid, totalopp, membercreatedate, notification_url, xhr) {
         this.subregion = subregion;
         this.oppowner = oppowner;
         this.oppname = oppname;
+        this.opp_sfdcid = opp_sfdcid
         this.totalopp = totalopp;
         this.membercreatedate = membercreatedate
 
@@ -108,6 +112,7 @@ class Task {
             subregion: this.subregion,
             oppowner: this.oppowner,
             oppname: this.oppname,
+            opp_sfdcid: this.opp_sfdcid,
             totalopp: this.totalopp,
             membercreatedate: this.membercreatedate
         };
