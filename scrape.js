@@ -7,10 +7,10 @@
 console.log('Check if the script is loaded successfully. (Inner)');
 
 AWS.config.update({
-    region: 'us-west-2',
+    region: 'ap-southeast-1',
     endpoint: 'http://localhost:8000',
-    accessKeyId: '@kazunoh is the best solution architect in the world',
-    secretAccessKey: 'You can say that again!'
+    accessKeyId: 'jasonng',
+    secretAccessKey: 'jasonngisthebest'
 });
 
 let docClient = new AWS.DynamoDB.DocumentClient();
@@ -29,6 +29,8 @@ async function realProcess(xhr) {
         var keys = Object.keys(data);
         console.log(keys);
         
+        var tmp_list = [];
+
         for (var j in keys) {
             if (data[keys[j]]['rows']) {
                 for (var i in data[keys[j]]['rows']) {
@@ -63,6 +65,9 @@ async function realProcess(xhr) {
                     
                     try {
                         let task = new Task(subregion, oppowner, oppname, opp_sfdcid, totalopp, membercreatedate, notification_url, GM_xmlhttpRequest);
+                        
+                        // Append opp id to list
+                        tmp_list.push(opp_sfdcid)
 
                         // send task to slack
                         task.notifyNewTask();
@@ -77,6 +82,8 @@ async function realProcess(xhr) {
         
         }
         
+        console.log(tmp_list);
+
         console.log('end of result')
     }
 }
