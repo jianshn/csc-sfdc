@@ -21,7 +21,7 @@ async function realProcess(xhr) {
     var tasks = [];
     if (xhr.responseURL.startsWith(sURL) && xhr.responseURL.endsWith(eURL)) {
 
-        const notification_url = new NotificationUrl(notification_new_url);
+        const notification_url = new NotificationUrl(notification_new_url, notification_co_url);
 
         console.log('processing:' + xhr.responseURL);
 
@@ -113,7 +113,7 @@ async function opp_more_than_one_hour() {
 
     for (item in result.Items) {
         console.log('Fetching items in ddb');
-        console.log(item['sfdc_id']);
+        console.log(item[0]['sfdc_id']);
         ddb_list.push(item['sfdc_id'])
     }
     return ddb_list;
@@ -159,7 +159,7 @@ class Task {
             data: JSON.stringify(data)
         });
 
-
+        console.log(slack_url)
         console.log('sent a task to slack.');
     }
 
