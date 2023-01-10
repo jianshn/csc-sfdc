@@ -70,7 +70,11 @@ async function realProcess(xhr) {
                         tmp_list.push(opp_sfdcid)
 
                         // send task to slack
-                        task.notifyNewTask();
+                        if (oppname.includes("[CO]")){
+                            task.notifyCOTask();
+                        } else {
+                            task.notifyNewTask();
+                        }
 
                     } catch(e) {
                         console.log(e);
@@ -92,8 +96,9 @@ async function realProcess(xhr) {
 }
 
 class NotificationUrl {
-    constructor(notification_new_url) {
+    constructor(notification_new_url, notification_co_url) {
         this.notification_new_url = notification_new_url;
+        this.notification_co_url = notification_co_url;
     }
 }
 
@@ -134,6 +139,10 @@ class Task {
         this.notify(this.notification_url.notification_new_url);
     }
     
+    notifyCOTask() {
+        this.notify(this.notification_url.notification_co_url);
+    }
+    
     notify(slack_url) {
         const data = {
             subregion: this.subregion,
@@ -150,7 +159,7 @@ class Task {
             data: JSON.stringify(data)
         });
 
-
+        console.log(slack_url)
         console.log('sent a task to slack.');
     }
 
