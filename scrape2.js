@@ -83,7 +83,9 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
-
+        console.log('Get ddb items');
+        let ddbItems = await Task.opp_more_than_one_hour();
+        console.log(ddbItems);
         console.log('end of result')
     }
 }
@@ -132,6 +134,56 @@ class Task {
 
 
         console.log('sent a task to slack.');
+    }
+
+    async opp_more_than_one_hour() {
+        const params = {
+            TableName: 'Test'
+        };
+        const result = await docClient.scan(params, function(err, data));
+        
+        var ddb_list = []
+
+        for item in result.Item {
+            ddb_list.push(item['sfdc_id'])
+        }
+        return ddb_list;
+    }
+
+    async insertToDB() {
+        const params = {
+            TableName: 'sfdc',
+            Item: {
+                'actId': this.act_id,
+                'createdAt': Date.now(),
+                'status': this.status,
+                'ttl': Date.now() + (60 * 60 * 24 * 30),
+                'type': this.type,
+                'sa': this.sa
+            }
+        };
+        const result = await docClient.put(params).promise();
+    }
+
+    async updateToDB() {
+        const params = {
+            TableName: 'sfdc',
+            Key: {
+                'actId': this.act_id,
+            },
+            UpdateExpression: 'set #status = :status, sa = :sa, #type = :type, updatedAt = :updated_at',
+            ExpressionAttributeNames: {
+                '#status': 'status',
+                '#type': 'type'
+            },
+            ExpressionAttributeValues: {
+                ':updated_at': Date.now(),
+                ':status': this.status,
+                ':type': this.type,
+                ':sa': this.sa
+            }
+        };
+        const result = await docClient.update(params).promise();
     }
 }
 
