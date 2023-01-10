@@ -86,7 +86,7 @@ async function realProcess(xhr) {
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log('finished getting items');
-        console.log(ddbItems['Items'][0]['sfdc_id']);
+        console.log(ddbItems[0]);
         console.log('end of result')
     }
 }
@@ -101,14 +101,12 @@ async function opp_more_than_one_hour() {
     const params = {
         TableName: 'Test'
     };
-    const result = await docClient.scan(params, function(err, data) {
-        if (err) console.log(err);
-        else console.log(data);
-    });
+    const result = await docClient.scan(params).promise().then((data) => {return data})
     
     var ddb_list = [];
 
-    for (item in result.Item) {
+    for (item in result.Items) {
+        console.log('Fetching items in ddb');
         console.log(item);
         ddb_list.push(item['sfdc_id'])
     }
