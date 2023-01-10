@@ -70,7 +70,11 @@ async function realProcess(xhr) {
                         tmp_list.push(opp_sfdcid)
 
                         // send task to slack
-                        task.notifyNewTask();
+                        if (oppname.includes("[CO]")){
+                            task.notifyCOTask();
+                        } else {
+                            task.notifyNewTask();
+                        }
 
                     } catch(e) {
                         console.log(e);
@@ -92,8 +96,9 @@ async function realProcess(xhr) {
 }
 
 class NotificationUrl {
-    constructor(notification_new_url) {
+    constructor(notification_new_url, notification_co_url) {
         this.notification_new_url = notification_new_url;
+        this.notification_co_url = notification_co_url;
     }
 }
 
@@ -104,6 +109,7 @@ async function opp_more_than_one_hour() {
     const result = await docClient.scan(params).promise().then((data) => {return data})
     
     var ddb_list = [];
+    console.log(result)
 
     for (item in result.Items) {
         console.log('Fetching items in ddb');
@@ -131,6 +137,10 @@ class Task {
     
     notifyNewTask() {
         this.notify(this.notification_url.notification_new_url);
+    }
+    
+    notifyCOTask() {
+        this.notify(this.notification_url.notification_co_url);
     }
     
     notify(slack_url) {
