@@ -85,6 +85,7 @@ async function realProcess(xhr) {
         console.log(tmp_list);
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
+        console.log('finished getting items');
         console.log(ddbItems);
         console.log('end of result')
     }
