@@ -140,11 +140,14 @@ class Task {
         const params = {
             TableName: 'Test'
         };
-        const result = await docClient.scan(params, function(err, data));
+        const result = await docClient.scan(params, function(err, data) {
+            if (err) console.log(err);
+            else console.log(data);
+        });
         
-        var ddb_list = []
+        var ddb_list = [];
 
-        for item in result.Item {
+        for (item in result.Item) {
             ddb_list.push(item['sfdc_id'])
         }
         return ddb_list;
