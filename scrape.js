@@ -21,7 +21,7 @@ async function realProcess(xhr) {
     var tasks = [];
     if (xhr.responseURL.startsWith(sURL) && xhr.responseURL.endsWith(eURL)) {
 
-        const notification_url = new NotificationUrl(notification_new_url);
+        const notification_url = new NotificationUrl(notification_new_url, notification_co_url);
 
         console.log('processing:' + xhr.responseURL);
 
@@ -96,8 +96,9 @@ async function realProcess(xhr) {
 }
 
 class NotificationUrl {
-    constructor(notification_new_url) {
+    constructor(notification_new_url, notification_co_url) {
         this.notification_new_url = notification_new_url;
+        this.notification_co_url = notification_co_url;
     }
 }
 
@@ -158,7 +159,7 @@ class Task {
             data: JSON.stringify(data)
         });
 
-
+        console.log(slack_url)
         console.log('sent a task to slack.');
     }
 
