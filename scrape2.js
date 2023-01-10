@@ -86,7 +86,7 @@ async function realProcess(xhr) {
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log('finished getting items');
-        console.log(ddbItems['Items']);
+        console.log(ddbItems[0]);
         console.log('end of result')
     }
 }
@@ -109,6 +109,7 @@ async function opp_more_than_one_hour() {
     var ddb_list = [];
 
     for (item in result.Item) {
+        console.log('Fetching items in ddb');
         console.log(item);
         ddb_list.push(item['sfdc_id'])
     }
