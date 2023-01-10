@@ -100,7 +100,7 @@ function opp_more_than_one_hour() {
     const params = {
         TableName: 'Test'
     };
-    const result = await docClient.scan(params, function(err, data) {
+    const result = docClient.scan(params, function(err, data) {
         if (err) console.log(err);
         else console.log(data);
     });
