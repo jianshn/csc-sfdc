@@ -84,7 +84,7 @@ async function realProcess(xhr) {
         
         console.log(tmp_list);
         console.log('Get ddb items');
-        let ddbItems = await Task.opp_more_than_one_hour();
+        let ddbItems = opp_more_than_one_hour();
         console.log(ddbItems);
         console.log('end of result')
     }
@@ -94,6 +94,23 @@ class NotificationUrl {
     constructor(notification_new_url) {
         this.notification_new_url = notification_new_url;
     }
+}
+
+function opp_more_than_one_hour() {
+    const params = {
+        TableName: 'Test'
+    };
+    const result = await docClient.scan(params, function(err, data) {
+        if (err) console.log(err);
+        else console.log(data);
+    });
+    
+    var ddb_list = [];
+
+    for (item in result.Item) {
+        ddb_list.push(item['sfdc_id'])
+    }
+    return ddb_list;
 }
 
 class Task {
@@ -134,23 +151,6 @@ class Task {
 
 
         console.log('sent a task to slack.');
-    }
-
-    async opp_more_than_one_hour() {
-        const params = {
-            TableName: 'Test'
-        };
-        const result = await docClient.scan(params, function(err, data) {
-            if (err) console.log(err);
-            else console.log(data);
-        });
-        
-        var ddb_list = [];
-
-        for (item in result.Item) {
-            ddb_list.push(item['sfdc_id'])
-        }
-        return ddb_list;
     }
 
     async insertToDB() {
