@@ -84,7 +84,7 @@ async function realProcess(xhr) {
         
         console.log(tmp_list);
         console.log('Get ddb items');
-        let ddbItems = opp_more_than_one_hour();
+        let ddbItems = await opp_more_than_one_hour();
         console.log(ddbItems);
         console.log('end of result')
     }
@@ -96,11 +96,11 @@ class NotificationUrl {
     }
 }
 
-function opp_more_than_one_hour() {
+async function opp_more_than_one_hour() {
     const params = {
         TableName: 'Test'
     };
-    const result = docClient.scan(params, function(err, data) {
+    const result = await docClient.scan(params, function(err, data) {
         if (err) console.log(err);
         else console.log(data);
     });
