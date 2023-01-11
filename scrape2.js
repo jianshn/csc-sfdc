@@ -111,11 +111,15 @@ async function opp_more_than_one_hour() {
     var ddb_list = [];
     console.log(result)
 
-    for (item in result.Items) {
-        console.log('Fetching items in ddb');
-        console.log(item[0]['sfdc_id']);
-        ddb_list.push(item['sfdc_id'])
-    }
+    result.Items.forEach(function (element, index, array) {
+        console.log(
+            "printing",
+            array
+        );
+      });
+    
+    ddb_list.push(item['sfdc_id'])
+    
     return ddb_list;
 }
 
