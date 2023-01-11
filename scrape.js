@@ -87,6 +87,7 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
+        tmp_list.push("yomama")
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log(ddbItems);
@@ -121,8 +122,8 @@ async function realProcess(xhr) {
         // compare ddb to tmp list, if not present, delete item in ddb
         try {
             const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
-            console.log(delete_items);
-            
+            console.log('delete: ' + delete_items);
+            console.log('tmp: ' + tmp_list)
             for (var i = 0; i < delete_items.length; i++) {
                 console.log('delete_item: ' + delete_items[i])
                 await deleteFromDb(delete_items[i])
@@ -193,7 +194,7 @@ async function deleteFromDb(id) {
     const params = {
         TableName: 'sfdc',
         Key: {
-            'sfdc': id
+            'sfdc_id': id
         }
     }
     const result = await docClient.delete(params).promise();
