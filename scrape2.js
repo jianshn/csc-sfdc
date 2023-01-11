@@ -114,7 +114,7 @@ async function opp_more_than_one_hour() {
     result.Items.forEach(function (element, index, array) {
         console.log(
             "printing",
-            array
+            element
         );
       });
     
