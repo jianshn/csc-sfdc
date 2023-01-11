@@ -87,7 +87,6 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
-        tmp_list.push('006234asdasf789243');
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log(ddbItems);
@@ -124,12 +123,12 @@ async function realProcess(xhr) {
             const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
             console.log('delete items:' + delete_items);
             while ( i < delete_items.length ) {
-                console.log('delete_item: ' + new_sfdc_item[i])
-                await deleteFromDb(new_sfdc_item[i])
+                console.log('delete_item: ' + delete_items[i])
+                await deleteFromDb(delete_items[i])
                 i++
             }
         } catch(e) {
-            console.log('tmp_list is empty, nothing to insert into ddb');
+            console.log('ddb items same as tmp list, Nothing to delete');
         }
         console.log('end of result')
     }
