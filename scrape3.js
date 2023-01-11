@@ -94,13 +94,13 @@ async function realProcess(xhr) {
         console.log('finished getting items');
         
         // insert item in ddb if present for the first time in sfdc
-        let new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
-        const new_array = new_sfdc_item.split(",");
-        console.log(new_array);
-        for (new_item in new_array) {
-            console.log('new items: ' + new_item);
-            // await insertToDB(new_item, 0)
-        };
+        const new_sfdc_item = String(tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element))).split(",");
+        console.log(new_sfdc_item);
+        while ( i < new_sfdc_item.length ) {
+            console.log('new_item: ' + new_sfdc_item[i])
+            await insertToDB(new_sfdc_item[i], 0)
+            i++
+        }
         
         // compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.length) {
