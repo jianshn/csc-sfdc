@@ -87,7 +87,6 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
-        tmp_list.push('006234asdasf789243');
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log(ddbItems);
@@ -119,6 +118,18 @@ async function realProcess(xhr) {
             i++;
         }
 
+        // compare ddb to tmp list, if not present, delete item in ddb
+        try {
+            const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
+            console.log('delete items:' + delete_items);
+            while ( i < delete_items.length ) {
+                console.log('delete_item: ' + delete_items[i])
+                await deleteFromDb(delete_items[i])
+                i++
+            }
+        } catch(e) {
+            console.log('ddb items same as tmp list, Nothing to delete');
+        }
         console.log('end of result')
     }
 }
@@ -175,6 +186,16 @@ async function updateToDB(id, time) {
         }
     };
     const result = await docClient.update(params).promise();
+}
+
+async function deleteFromDb(id) {
+    const params = {
+        TableName: 'sfdc',
+        Key: {
+            'sfdc': id
+        }
+    }
+    const result = await docClient.delete(params).promise();
 }
 
 class Task {
