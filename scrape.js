@@ -106,13 +106,15 @@ async function realProcess(xhr) {
             console.log(e);
         }
         
-        // compare opp in tmp list to ddb table, add time if present
+        // compare opp in tmp list to ddb table, add time if present, 0 = sfdc_id, 1 = time_in_sfdc
         while (i < ddbItems.ddb_list.length) {
-            console.log('updatedb ' + ddbItems.ddb_list[0][0])
             for (opp in tmp_list) {
-                if (opp == ddbItems.ddb_list[i]['sfdc_id']) {
-                    ddbItems.ddb_list[i]['time_in_sfdc'] = ddbItems.ddb_list[i]['time_in_sfdc'] + 30;
-                    await updateToDB(ddbItems.ddb_list[i]['sfdc_id'],ddbItems.ddb_list[i]['time_in_sfdc'])
+                console.log(i);
+                console.log(opp);
+                console.log(ddbItems.ddb_list[0]);
+                if (opp == ddbItems.ddb_list[i][0]) {
+                    ddbItems.ddb_list[i][1] = ddbItems.ddb_list[i][1] + 30;
+                    await updateToDB(ddbItems.ddb_list[i][0],ddbItems.ddb_list[i][1])
                 }
             }
             i++;
