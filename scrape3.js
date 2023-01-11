@@ -87,8 +87,9 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
+        tmp_list.push("yomama")
         console.log('Get ddb items');
-        let ddbItems = await opp_more_than_one_hour();
+        let ddbItems = await readDB();
         console.log(ddbItems);
         console.log('finished getting items');
         
@@ -131,6 +132,9 @@ async function realProcess(xhr) {
         } catch(e) {
             console.log('ddb items same as tmp list, Nothing to delete');
         }
+
+        // send to slack channel those with time in sfdc more than 1 hour
+        await opp_more_than_one_hour()
         console.log('end of result')
     }
 }
@@ -143,6 +147,27 @@ class NotificationUrl {
 }
 
 async function opp_more_than_one_hour() {
+    const params = {
+        TableName: 'sfdc'
+    };
+    const result = await docClient.scan(params).promise().then((data) => {return data})
+
+    result.Items.forEach(function (element, index, array) {
+        if (element['time_in_sfdc'] > 59) {
+            fetch("https://hooks.slack.com/workflows/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", {
+                method: "POST",
+                body: JSON.stringify({
+                    opp_sfdcid: "https://aws-crm.lightning.force.com/lightning/r/Report/" + element['sfdc_id'] + "/view"
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+                });
+        } 
+    })
+}
+
+async function readDB() {
     const params = {
         TableName: 'sfdc'
     };
