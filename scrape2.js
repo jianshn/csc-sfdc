@@ -111,7 +111,7 @@ async function realProcess(xhr) {
             for (var j = 0; j < tmp_list.length; j++) {
                 console.log('opp: ' + tmp_list[j]);
                 console.log('ddb item: ' + ddbItems.ddb_list[i][0]);
-                if (opp === ddbItems.ddb_list[i][0]) {
+                if (tmp_list[j] === ddbItems.ddb_list[i][0]) {
                     ddbItems.ddb_list[i][1] = ddbItems.ddb_list[i][1] + 30;
                     await updateToDB(ddbItems.ddb_list[i][0],ddbItems.ddb_list[i][1])
                 }
@@ -119,6 +119,18 @@ async function realProcess(xhr) {
             i++;
         }
 
+        // compare ddb to tmp list, if not present, delete item in ddb
+        try {
+            const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
+            console.log('delete items:' + delete_items);
+            while ( i < delete_items.length ) {
+                console.log('delete_item: ' + new_sfdc_item[i])
+                await deleteFromDb(new_sfdc_item[i])
+                i++
+            }
+        } catch(e) {
+            console.log('tmp_list is empty, nothing to insert into ddb');
+        }
         console.log('end of result')
     }
 }
@@ -132,7 +144,7 @@ class NotificationUrl {
 
 async function opp_more_than_one_hour() {
     const params = {
-        TableName: 'Test'
+        TableName: 'sfdc'
     };
     const result = await docClient.scan(params).promise().then((data) => {return data})
     
@@ -154,7 +166,7 @@ async function opp_more_than_one_hour() {
 
 async function insertToDB(id, time) {
     const params = {
-        TableName: 'Test',
+        TableName: 'sfdc',
         Item: {
             'sfdc_id': id,
             'time_in_sfdc': time
@@ -165,9 +177,9 @@ async function insertToDB(id, time) {
 
 async function updateToDB(id, time) {
     const params = {
-        TableName: 'Test',
+        TableName: 'sfdc',
         Key: {
-            'sfdc_id': id,
+            'sfdc_id': id
         },
         UpdateExpression: 'set time_in_sfdc = :val1',
         ExpressionAttributeValues: {
@@ -175,6 +187,16 @@ async function updateToDB(id, time) {
         }
     };
     const result = await docClient.update(params).promise();
+}
+
+async function deleteFromDb(id) {
+    const params = {
+        TableName: 'sfdc',
+        Key: {
+            'sfdc': id
+        }
+    }
+    const result = await docClient.delete(params).promise();
 }
 
 class Task {
