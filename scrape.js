@@ -108,7 +108,7 @@ async function realProcess(xhr) {
         
         // compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.ddb_list.length) {
-            console.log('updatedb ' + ddbItems.ddb_list)
+            console.log('updatedb ' + ddbItems.ddb_list[0][0])
             for (opp in tmp_list) {
                 if (opp == ddbItems.ddb_list[i]['sfdc_id']) {
                     ddbItems.ddb_list[i]['time_in_sfdc'] = ddbItems.ddb_list[i]['time_in_sfdc'] + 30;
