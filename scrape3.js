@@ -88,11 +88,12 @@ async function realProcess(xhr) {
         
         console.log(tmp_list);
         console.log('Get ddb items');
-        let ddbItems, ddbSFDCItems = await opp_more_than_one_hour();
+        let ddbItems = await opp_more_than_one_hour();
+        console.log(ddbItems)
         console.log('finished getting items');
         
         //insert item in ddb if present for the first time in sfdc
-        const new__sfdc_item = tmp_list.filter(element => !ddbSFDCItems.includes(element));
+        const new__sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
         console.log(new__sfdc_item); 
         
         //compare opp in tmp list to ddb table, add time if present
@@ -136,7 +137,7 @@ async function opp_more_than_one_hour() {
         ddb_sfdc_list.push(element['sfdc_id']);
       });
     
-    return ddb_list, ddb_sfdc_list;
+    return {ddb_list, ddb_sfdc_list};
 }
 
 class Task {
