@@ -88,8 +88,23 @@ async function realProcess(xhr) {
         
         console.log(tmp_list);
         console.log('Get ddb items');
-        let ddbItems = await opp_more_than_one_hour();
+        let ddbItems, ddbSFDCItems = await opp_more_than_one_hour();
         console.log('finished getting items');
+        
+        //insert item in ddb if present for the first time in sfdc
+        const new__sfdc_item = tmp_list.filter(element => !ddb_sfdc_list.includes(element));
+        console.log(new__sfdc_item); 
+        
+        //compare opp in tmp list to ddb table, add time if present
+        while (i < ddbItems.length) {
+            for (opp in tmp_list) {
+                if (opp == ddbItems[i]['sfdc_id']) {
+                    ddbItems[i]['time_in_sfdc'] = ddbItems[i]['time_in_sfdc'] + 30;
+                }
+            }
+            i++;
+        }
+
         console.log(ddbItems);
         console.log('end of result')
     }
@@ -109,6 +124,7 @@ async function opp_more_than_one_hour() {
     const result = await docClient.scan(params).promise().then((data) => {return data})
     
     var ddb_list = [];
+    var ddb_sfdc_list = []
     console.log(result)
 
     result.Items.forEach(function (element, index, array) {
@@ -116,10 +132,11 @@ async function opp_more_than_one_hour() {
             "printing",
             element['sfdc_id']
         );  
-        ddb_list.push([element['sfdc_id'], element['time_in_sfdc']])
+        ddb_list.push([element['sfdc_id'], element['time_in_sfdc']]);
+        ddb_sfdc_list.push(element['sfdc_id']);
       });
     
-    return ddb_list;
+    return ddb_list, ddb_sfdc_list;
 }
 
 class Task {
