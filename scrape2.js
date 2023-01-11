@@ -93,8 +93,11 @@ async function realProcess(xhr) {
         console.log('finished getting items');
         
         //insert item in ddb if present for the first time in sfdc
-        const new__sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
-        console.log('new__sfdc_item: ' + new__sfdc_item); 
+        var new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
+        console.log('new_sfdc_item: ' + new_sfdc_item);
+        for (new_item in new_sfdc_item) {
+            insertToDB(new_item, 0)
+        };
         
         //compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.length) {
@@ -106,7 +109,6 @@ async function realProcess(xhr) {
             i++;
         }
 
-        console.log(ddbItems);
         console.log('end of result')
     }
 }
@@ -184,16 +186,12 @@ class Task {
         console.log('sent a task to slack.');
     }
 
-    async insertToDB() {
+    async insertToDB(id, time) {
         const params = {
-            TableName: 'sfdc',
+            TableName: 'Test',
             Item: {
-                'actId': this.act_id,
-                'createdAt': Date.now(),
-                'status': this.status,
-                'ttl': Date.now() + (60 * 60 * 24 * 30),
-                'type': this.type,
-                'sa': this.sa
+                'sfdc_id': id,
+                'time_in_sfdc': time
             }
         };
         const result = await docClient.put(params).promise();
