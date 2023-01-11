@@ -87,7 +87,6 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
-        tmp_list.push("yomama")
         console.log('Get ddb items');
         let ddbItems = await readDB();
         console.log(ddbItems);
@@ -157,7 +156,6 @@ async function opp_more_than_one_hour() {
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://hooks.slack.com/workflows/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");
             xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
 
             xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
