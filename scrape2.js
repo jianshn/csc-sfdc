@@ -154,15 +154,21 @@ async function opp_more_than_one_hour() {
 
     result.Items.forEach(function (element, index, array) {
         if (element['time_in_sfdc'] > 59) {
-            fetch("https://hooks.slack.com/workflows/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", {
-                method: "POST",
-                body: JSON.stringify({
-                    opp_sfdcid: "https://aws-crm.lightning.force.com/lightning/r/Report/" + element['sfdc_id'] + "/view"
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-                }).then((response)=response.json());
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://hooks.slack.com/workflows/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");
+            xhr.setRequestHeader("Accept", "application/json");
+
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+            }};
+
+            let data = JSON.stringify({
+                opp_sfdcid: "https://aws-crm.lightning.force.com/lightning/r/Report/" + element['sfdc_id'] + "/view"
+            });
+
+            xhr.send(data);
         } 
     })
 }
