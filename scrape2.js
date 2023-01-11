@@ -94,7 +94,7 @@ async function realProcess(xhr) {
         
         //insert item in ddb if present for the first time in sfdc
         const new__sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
-        console.log(new__sfdc_item); 
+        console.log('new__sfdc_item: ' + new__sfdc_item); 
         
         //compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.length) {
@@ -137,7 +137,7 @@ async function opp_more_than_one_hour() {
         ddb_sfdc_list.push(element['sfdc_id']);
       });
     
-    return ddb_list, ddb_sfdc_list;
+    return {ddb_list, ddb_sfdc_list};
 }
 
 class Task {
