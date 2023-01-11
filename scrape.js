@@ -97,7 +97,7 @@ async function realProcess(xhr) {
         let new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
         console.log('new_items: ' + new_sfdc_item);
         for (new_item in new_sfdc_item) {
-            console.log('new item: ' + new_item);
+            console.log('new item: ' + new_item[0]);
             // await insertToDB(new_item, 0)
         };
         
