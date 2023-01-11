@@ -21,7 +21,7 @@ async function realProcess(xhr) {
     var tasks = [];
     if (xhr.responseURL.startsWith(sURL) && xhr.responseURL.endsWith(eURL)) {
 
-        const notification_url = new NotificationUrl(notification_new_url);
+        const notification_url = new NotificationUrl(notification_new_url, notification_co_url);
 
         console.log('processing:' + xhr.responseURL);
 
@@ -111,11 +111,15 @@ async function opp_more_than_one_hour() {
     var ddb_list = [];
     console.log(result)
 
-    for (item in result.Items) {
-        console.log('Fetching items in ddb');
-        console.log(item['sfdc_id']);
-        ddb_list.push(item['sfdc_id'])
-    }
+    result.Items.forEach(function (element, index, array) {
+        console.log(
+            "printing",
+            array[sfdc_id] + " (" + array[time_in_sfdc] + ")"
+        );
+      });
+    
+    ddb_list.push(item['sfdc_id'])
+    
     return ddb_list;
 }
 
