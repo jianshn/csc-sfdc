@@ -93,8 +93,11 @@ async function realProcess(xhr) {
         console.log('finished getting items');
         
         //insert item in ddb if present for the first time in sfdc
-        const new__sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
-        console.log('new__sfdc_item: ' + new__sfdc_item); 
+        var new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
+        console.log('new_sfdc_item: ' + new_sfdc_item);
+        for (new_item in new_sfdc_item) {
+            await insertToDB(new_item, 0)
+        };
         
         //compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.length) {
@@ -137,6 +140,38 @@ async function opp_more_than_one_hour() {
       });
     
     return {ddb_list, ddb_sfdc_list};
+}
+
+async function insertToDB(id, time) {
+    const params = {
+        TableName: 'Test',
+        Item: {
+            'sfdc_id': id,
+            'time_in_sfdc': time
+        }
+    };
+    const result = await docClient.put(params).promise();
+}
+
+async function updateToDB() {
+    const params = {
+        TableName: 'sfdc',
+        Key: {
+            'actId': this.act_id,
+        },
+        UpdateExpression: 'set #status = :status, sa = :sa, #type = :type, updatedAt = :updated_at',
+        ExpressionAttributeNames: {
+            '#status': 'status',
+            '#type': 'type'
+        },
+        ExpressionAttributeValues: {
+            ':updated_at': Date.now(),
+            ':status': this.status,
+            ':type': this.type,
+            ':sa': this.sa
+        }
+    };
+    const result = await docClient.update(params).promise();
 }
 
 class Task {
@@ -183,41 +218,6 @@ class Task {
         console.log('sent a task to slack.');
     }
 
-    async insertToDB() {
-        const params = {
-            TableName: 'sfdc',
-            Item: {
-                'actId': this.act_id,
-                'createdAt': Date.now(),
-                'status': this.status,
-                'ttl': Date.now() + (60 * 60 * 24 * 30),
-                'type': this.type,
-                'sa': this.sa
-            }
-        };
-        const result = await docClient.put(params).promise();
-    }
-
-    async updateToDB() {
-        const params = {
-            TableName: 'sfdc',
-            Key: {
-                'actId': this.act_id,
-            },
-            UpdateExpression: 'set #status = :status, sa = :sa, #type = :type, updatedAt = :updated_at',
-            ExpressionAttributeNames: {
-                '#status': 'status',
-                '#type': 'type'
-            },
-            ExpressionAttributeValues: {
-                ':updated_at': Date.now(),
-                ':status': this.status,
-                ':type': this.type,
-                ':sa': this.sa
-            }
-        };
-        const result = await docClient.update(params).promise();
-    }
 }
 
 function hijackAjax(process) {
