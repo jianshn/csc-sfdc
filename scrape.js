@@ -109,9 +109,9 @@ async function realProcess(xhr) {
         // compare opp in tmp list to ddb table, add time if present, 0 = sfdc_id, 1 = time_in_sfdc
         while (i < ddbItems.ddb_list.length) {
             for (var j = 0; j < tmp_list.length; j++) {
-                console.log('opp: ' + opp[j]);
+                console.log('opp: ' + tmp_list[j]);
                 console.log('ddb item: ' + ddbItems.ddb_list[i][0]);
-                if (opp === ddbItems.ddb_list[i][0]) {
+                if (tmp_list[j] === ddbItems.ddb_list[i][0]) {
                     ddbItems.ddb_list[i][1] = ddbItems.ddb_list[i][1] + 30;
                     await updateToDB(ddbItems.ddb_list[i][0],ddbItems.ddb_list[i][1])
                 }
@@ -132,7 +132,7 @@ class NotificationUrl {
 
 async function opp_more_than_one_hour() {
     const params = {
-        TableName: 'Test'
+        TableName: 'sfdc'
     };
     const result = await docClient.scan(params).promise().then((data) => {return data})
     
@@ -154,7 +154,7 @@ async function opp_more_than_one_hour() {
 
 async function insertToDB(id, time) {
     const params = {
-        TableName: 'Test',
+        TableName: 'sfdc',
         Item: {
             'sfdc_id': id,
             'time_in_sfdc': time
@@ -165,9 +165,9 @@ async function insertToDB(id, time) {
 
 async function updateToDB(id, time) {
     const params = {
-        TableName: 'Test',
+        TableName: 'sfdc',
         Key: {
-            'sfdc_id': id,
+            'sfdc_id': id
         },
         UpdateExpression: 'set time_in_sfdc = :val1',
         ExpressionAttributeValues: {
