@@ -115,10 +115,9 @@ async function opp_more_than_one_hour() {
         console.log(
             "printing",
             element['sfdc_id']
-        );
+        );  
+        ddb_list.push([element['sfdc_id'], element['time_in_sfdc']])
       });
-    
-    ddb_list.push(item['sfdc_id'])
     
     return ddb_list;
 }
