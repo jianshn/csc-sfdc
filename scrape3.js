@@ -121,12 +121,13 @@ async function realProcess(xhr) {
         // compare ddb to tmp list, if not present, delete item in ddb
         try {
             const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
-            console.log(delete_items);
-            while ( i < delete_items.length ) {
+            console.log('delete: ' + delete_items);
+            console.log('tmp: ' + tmp_list)
+            for (var i = 0; i < delete_items.length; i++) {
                 console.log('delete_item: ' + delete_items[i])
                 await deleteFromDb(delete_items[i])
-                i++
             }
+
         } catch(e) {
             console.log('ddb items same as tmp list, Nothing to delete');
         }
@@ -192,7 +193,7 @@ async function deleteFromDb(id) {
     const params = {
         TableName: 'sfdc',
         Key: {
-            'sfdc': id
+            'sfdc_id': id
         }
     }
     const result = await docClient.delete(params).promise();
