@@ -90,6 +90,17 @@ async function realProcess(xhr) {
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log('finished getting items');
+        
+        //compare opp in tmp list to ddb table
+        while (i < ddbItems.length) {
+            for (opp in tmp_list) {
+                if (opp == ddbItems[i]['sfdc_id']) {
+                    ddbItems[i]['time_in_sfdc'] = ddbItems[i]['time_in_sfdc'] + 30;
+                }
+            }
+            i++;
+        }
+
         console.log(ddbItems);
         console.log('end of result')
     }
@@ -116,7 +127,7 @@ async function opp_more_than_one_hour() {
             "printing",
             element['sfdc_id']
         );  
-        ddb_list.push(element['sfdc_id'])
+        ddb_list.push([element['sfdc_id'], element['time_in_sfdc']])
       });
     
     return ddb_list;
