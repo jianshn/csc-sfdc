@@ -94,19 +94,25 @@ async function realProcess(xhr) {
         console.log('finished getting items');
         
         // insert item in ddb if present for the first time in sfdc
-        const new_sfdc_item = String(tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element))).split(",");
-        console.log(new_sfdc_item);
-        while ( i < new_sfdc_item.length ) {
-            console.log('new_item: ' + new_sfdc_item[i])
-            await insertToDB(new_sfdc_item[i], 0)
-            i++
+        try {
+            const new_sfdc_item = String(tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element))).split(",");
+            console.log(new_sfdc_item);
+            while ( i < new_sfdc_item.length ) {
+                console.log('new_item: ' + new_sfdc_item[i])
+                await insertToDB(new_sfdc_item[i], 0)
+                i++
+            }
+        } catch(e) {
+            console.log(e);
         }
         
         // compare opp in tmp list to ddb table, add time if present
-        while (i < ddbItems.length) {
+        while (i < ddbItems.ddb_list.length) {
+            console.log('updatedb ' + ddbItems.ddb_list[i]['sfdc_id'])
             for (opp in tmp_list) {
-                if (opp == ddbItems[i]['sfdc_id']) {
-                    ddbItems[i]['time_in_sfdc'] = ddbItems[i]['time_in_sfdc'] + 30;
+                if (opp == ddbItems.ddb_list[i]['sfdc_id']) {
+                    ddbItems.ddb_list[i]['time_in_sfdc'] = ddbItems.ddb_list[i]['time_in_sfdc'] + 30;
+                    await updateToDB(ddbItems.ddb_list[i]['sfdc_id'],ddbItems.ddb_list[i]['time_in_sfdc'])
                 }
             }
             i++;
@@ -156,22 +162,15 @@ async function insertToDB(id, time) {
     const result = await docClient.put(params).promise();
 }
 
-async function updateToDB() {
+async function updateToDB(id, time) {
     const params = {
-        TableName: 'sfdc',
+        TableName: 'Test',
         Key: {
-            'actId': this.act_id,
+            'sfdc_id': id,
         },
-        UpdateExpression: 'set #status = :status, sa = :sa, #type = :type, updatedAt = :updated_at',
-        ExpressionAttributeNames: {
-            '#status': 'status',
-            '#type': 'type'
-        },
+        UpdateExpression: 'set time_in_sfdc = :val1',
         ExpressionAttributeValues: {
-            ':updated_at': Date.now(),
-            ':status': this.status,
-            ':type': this.type,
-            ':sa': this.sa
+            ':val1': time
         }
     };
     const result = await docClient.update(params).promise();
