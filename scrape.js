@@ -106,7 +106,6 @@ async function realProcess(xhr) {
             i++;
         }
 
-        console.log(ddbItems);
         console.log('end of result')
     }
 }
