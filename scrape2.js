@@ -90,7 +90,7 @@ async function realProcess(xhr) {
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
         console.log('finished getting items');
-        console.log(ddbItems[0]);
+        console.log(ddbItems);
         console.log('end of result')
     }
 }
@@ -114,11 +114,10 @@ async function opp_more_than_one_hour() {
     result.Items.forEach(function (element, index, array) {
         console.log(
             "printing",
-            element
-        );
+            element['sfdc_id']
+        );  
+        ddb_list.push([element['sfdc_id'], element['time_in_sfdc']])
       });
-    
-    ddb_list.push(item['sfdc_id'])
     
     return ddb_list;
 }
