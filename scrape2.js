@@ -103,13 +103,19 @@ async function realProcess(xhr) {
                 i++
             }
         } catch(e) {
-            console.log(e);
+            console.log('tmp_list is empty, nothing to insert into ddb');
         }
         
         // compare opp in tmp list to ddb table, add time if present, 0 = sfdc_id, 1 = time_in_sfdc
         while (i < ddbItems.ddb_list.length) {
-            console.log(ddbItems.ddb_list[3][0]);
-
+            for (opp in tmp_list) {
+                console.log(opp);
+                console.log(ddbItems.ddb_list[i][0]);
+                if (opp === ddbItems.ddb_list[i][0]) {
+                    ddbItems.ddb_list[i][1] = ddbItems.ddb_list[i][1] + 30;
+                    await updateToDB(ddbItems.ddb_list[i][0],ddbItems.ddb_list[i][1])
+                }
+            }
             i++;
         }
 
