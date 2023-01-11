@@ -121,10 +121,10 @@ async function realProcess(xhr) {
         // compare ddb to tmp list, if not present, delete item in ddb
         try {
             const delete_items = String(ddbItems.ddb_sfdc_list.filter(element => !tmp_list.includes(element))).split(",");
-            console.log('delete items:' + delete_items);
+            console.log(delete_items);
             while ( i < delete_items.length ) {
                 console.log('delete_item: ' + delete_items[i])
-                await deleteFromDb(delete_item[i])
+                await deleteFromDb(delete_items[i])
                 i++
             }
         } catch(e) {
