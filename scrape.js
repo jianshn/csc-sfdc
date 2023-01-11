@@ -93,8 +93,8 @@ async function realProcess(xhr) {
         console.log('finished getting items');
         
         //insert item in ddb if present for the first time in sfdc
-        let new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
-        console.log('new_sfdc_item: ' + new_sfdc_item);
+        let new_sfdc_item = JSON.parse(tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element)));
+        console.log('new_items: ' + new_sfdc_item);
         for (new_item in new_sfdc_item) {
             console.log('new item: ' + new_item);
             // await insertToDB(new_item, 0)
