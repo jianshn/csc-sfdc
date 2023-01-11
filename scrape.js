@@ -87,20 +87,21 @@ async function realProcess(xhr) {
         }
         
         console.log(tmp_list);
+        tmp_list.push('006234asdasf789243');
         console.log('Get ddb items');
         let ddbItems = await opp_more_than_one_hour();
-        console.log(ddbItems)
+        console.log(ddbItems);
         console.log('finished getting items');
         
-        //insert item in ddb if present for the first time in sfdc
-        let new_sfdc_item = JSON.parse(tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element)));
+        // insert item in ddb if present for the first time in sfdc
+        let new_sfdc_item = tmp_list.filter(element => !ddbItems.ddb_sfdc_list.includes(element));
         console.log('new_items: ' + new_sfdc_item);
         for (new_item in new_sfdc_item) {
             console.log('new item: ' + new_item);
             // await insertToDB(new_item, 0)
         };
         
-        //compare opp in tmp list to ddb table, add time if present
+        // compare opp in tmp list to ddb table, add time if present
         while (i < ddbItems.length) {
             for (opp in tmp_list) {
                 if (opp == ddbItems[i]['sfdc_id']) {
