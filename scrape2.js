@@ -152,16 +152,17 @@ async function opp_more_than_one_hour() {
     };
     const result = await docClient.scan(params).promise().then((data) => {return data})
 
-    let request = new XMLHttpRequest();
-    request.open("POST", "https://hooks.slack.com/workflows/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");
-    request.setRequestHeader("Accept", "application/json");
-    request.setRequestHeader("Content-Type", "application/json");
     result.Items.forEach(function (element, index, array) {
         if (element['time_in_sfdc'] > 59) {
-            let data = {
-                "opp_sfdcid": "https://aws-crm.lightning.force.com/lightning/r/Report/" + element['sfdc_id'] + "/view"
-            }
-            request.send(data)
+            fetch("https://hooks.slack.com/workflows/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", {
+                method: "POST",
+                body: JSON.stringify({
+                    opp_sfdcid: "https://aws-crm.lightning.force.com/lightning/r/Report/" + element['sfdc_id'] + "/view"
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+                }).then((response)=response.json());
         } 
     })
 }
